@@ -42,8 +42,97 @@ def get_resource(path):
     content = open(path.replace("/", "")).read()
   return Response(content, mimetype=mimetype)
 
+class Movies(Resource):
+  def get(self):
+    with open('movieData.json', 'r') as openJsonReadable:
+      movieData = json.load(openJsonReadable)
+    return movieData
 
-api.add_resource(List, '/api/lists/<ID>')
+    
+  def post(self):
+    with open('movieData.json', 'r') as openJsonReadable:
+      movieData = json.load(openJsonReadable)
+      
+    newMovie = True
+    for i in movieData:
+      if remove(request.json["name"].lower()) != remove(i["name"].lower()) and newMovie == True:
+        newMovie = True
+      elif remove(request.json["name"].lower()) == remove(i["name"].lower()):
+        newMovie = False
+
+    if newMovie == True and remove(request.json["name"].lower()) != "":
+      dataLength = len(movieData)
+      print(request.json)
+      
+      overallProbability = 0
+      for item in movieData:
+        overallProbability += item["probability"]
+
+      dataLength = len(movieData)
+      meanProbabilty = overallProbability / dataLength
+
+      print(f"Probability: {meanProbabilty}")
+      
+      movieData.append({"ID": dataLength + 1,"name": escape(request.get_json(force=True)["name"]), "addedBy": request.get_json(force=True)["addedBy"], "probability": int(round(meanProbabilty, 0))})
+      
+      with open("movieData.json", "w") as openJsonWritable:
+        json.dump(movieData, openJsonWritable, indent=2)
+      return movieData
+
+
+class RandomMovie(Resource):
+  def post(self):
+    with open('movieData.json', 'r') as openJsonReadable:
+      movieData = json.load(openJsonReadable)
+
+    with open('addedByData.json', 'r') as openJsonReadable:
+      addedByData = json.load(openJsonReadable)
+
+    usedNames = []
+    for item in movieData:
+      usedNames.append(item["addedBy"])
+
+    usedNames = [*set(usedNames)]
+
+    possibleNames = []
+    for item in usedNames:
+      possibleNames.append(findBy(item, addedByData, "name"))
+
+    namePicked = probabilityPickingSystem(possibleNames, "Picked Name Data:")
+
+    for item in possibleNames:
+      if item["name"] != namePicked[0]["name"]:
+        item["probability"] += 1
+      else:
+        item["probability"] = 0
+
+      addedByData[item["ID"] - 1]["probability"] = int(item["probability"])
+
+    with open("addedByData.json", "w") as openJsonWritable:
+      json.dump(addedByData, openJsonWritable, indent=2)
+
+    moviesAvailable = []
+    for item in movieData:
+      if item["addedBy"] == namePicked[0]["name"]:
+        moviesAvailable.append(item)
+
+    chosenMovie = probabilityPickingSystem(moviesAvailable, "Picked Movie Data:")
+
+    for item in movieData:
+      if item["name"] != chosenMovie[0]["name"]:
+        item["probability"] += 1
+      else:
+        item["probability"] = 0
+
+      movieData[item["ID"] - 1]["probability"] = int(item["probability"])
+
+    with open("movieData.json", "w") as openJsonWritable:
+      json.dump(movieData, openJsonWritable, indent=2)
+
+    return chosenMovie[0]
+
+api.add_resource(Movies, '/api/movies')
+api.add_resource(RandomMovie, '/api/movies/random')
 
 def run():
   app.run(host='0.0.0.0', port=7210, threaded = True)
