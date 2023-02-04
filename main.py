@@ -18,9 +18,29 @@ def findBy(IDToFind, JSONObject, fieldToFind):
         if item[fieldToFind].lower() == IDToFind.lower():
             return item
           
+
 def remove(string):
   return string.replace(" ", "")
+
+
+def probabilityPickingSystem(arrayWithProbability, message):
+  overallProbability = 0
+  for item in arrayWithProbability:
+    overallProbability += item["probability"]
+
+  percentages = []
+  for item in arrayWithProbability:
+    if item["probability"] == 0:
+      percentages.append(0)
+    else:
+      percentages.append((item["probability"] / overallProbability) * 100)
+
+  picked = choices(arrayWithProbability, percentages)
+  print(f"{message} {picked}")
+
+  return picked
   
+
 @app.route('/', defaults={'path': '/home.html'})
 @app.route('/<path:path>')
 def get_resource(path):
