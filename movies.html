@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>The Astall Website</title>
+  <link href="style.css" rel="stylesheet" type="text/css"/>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
+</head>
+<body>
+  <div class="menu">
+    <div id="h1">
+      The Astall Website
+    </div>
+    <a class="disactive" id="loginButton" href="login.html">
+      Login
+    </a>
+    <a class="active" id="moviesButton" href="list.html">
+      Movies
+    </a>
+    <a class="disactive" id="homeButton" href="home.html">
+      Home
+    </a>
+  </div>
+  
+  <div id="OptionsButtons">
+    <div class="buttons">
+      <element onclick="AddMovie()">
+        <button type="button" id="Button1">
+          <div class="p">
+            <p1>
+              Add Movie To Movies
+            </p1>
+          </div>
+        </button>
+      </element>
+      <element onclick="PickRandomNumber()">
+        <button type="button" id="Button2">
+          <div class="p">
+            <p2>
+              Pick A Movie At Random
+            </p2>
+          </div>
+        </button>
+      </element>
+    </div>
+  </div>
+
+  <div id="ChosenMovie">
+  </div>
+
+  <div id="AddMovie" style="display:none;">
+    <input type="text" id="nameOfMovie" name="nameOfMovie" placeholder="Star Wars A New Hope">
+    <select type="text" id="addedBy" name="addedBy">
+      <option value="magnus">
+        <div class="p">
+          <p5>
+            Magnus
+          </p5>
+        </div>
+      </option>
+      <option value="jasmine">
+        <div class="p">
+          <p6>
+            Jasmine
+          </p6>
+        </div>
+      </option>
+      <option value="chris">
+        <div class="p">
+          <p7>
+            Chris
+          </p7>
+        </div>
+      </option>
+      <option value="janet">
+        <div class="p">
+          <p8>
+            Janet
+          </p8>
+        </div>
+      </option>
+    </select>
+    <div class="buttons">
+      <element onclick="SubmitFilm()">
+        <button type="button" id="Button3">
+          <div class="p">
+            <p4>
+              Submit
+            </p4>
+          </div>
+        </button>
+      </element>
+    </div>
+  </div>
+
+  
+  <div id="Movies">
+  </div>
+
+</body>
+
+</html>
